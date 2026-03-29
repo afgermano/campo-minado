@@ -1,0 +1,79 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    background: url("https://i.imgur.com/Zk6TR5k.jpg") no-repeat center center;
+    background-size: cover;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container central */
+.conteiner {
+    text-align: center;
+    color: white;
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+#band {
+    position: absolute;
+    right: -6%;
+    top: 30%;
+    width: 90px;
+}
+
+/* Título estilo pixel + inclinado */
+h1 {
+    font-size: 48px;
+    font-family: 'Courier New', monospace;
+    transform: rotate(-10deg);
+    margin-bottom: 45px;
+    text-shadow: 
+        3px 3px 0px black,
+        6px 6px 0px rgba(0,0,0,0.3);
+}
+#bomb{
+    position: absolute;
+    right: 500px;
+    top: 42%;
+    width: 70px;
+}
+
+/* Subtítulo */
+h3 {
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 3px black;
+}
+
+/* Botão estilo retrô */
+button {
+    font-size: 20px;
+    padding: 10px 30px;
+    background: #dcdcdc;
+    border: 3px solid #555;
+    box-shadow: 4px 4px 0px #333;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    transition: 0.1s;
+}
+
+/* Efeito ao clicar */
+button:active {
+    transform: translate(4px, 4px);
+    box-shadow: none;
+}
+
+/* Layout tipo menu */
+.conteiner button {
+    margin: 10px;
+}

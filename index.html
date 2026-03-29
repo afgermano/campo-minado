@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="css/style.css"> <!-- coloque o css -->
+    <title>Campo-Minado</title>
+
+    <style>
+    @font-face {
+    font-family: 'calculator';
+    src: url('fonts/Calculator.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+    </style>
+
+</head>
+<body>
+    <div class="conteiner">
+        <!-- a navbar -->
+        <nav>
+            <h1>Campo Matematico!</h1>
+            <!-- acho que seria melhor só atualizar o cuculo no placar em vez de ficar criando telas -->
+            <button id="ProximaPagina" title="Proximo Exercício"><i class="bi bi-arrow-bar-right"></i></button>
+        </nav>
+        
+        <!-- aqui começa as divs essa é onde aparece o cauculo e onde é inserido o resultado e enviado para js caucular se esta certo ou errado -->
+        <div class="painelControle" id="painelControle">
+          <div class="questoesMatematica">
+            <h2 id="showQuestao"></h2> <!-- Aqui é onde aparece as questoes matematicas -->
+          </div>
+          <div id="funcoesResolvidas"></div>
+          <br>
+        </div>
+ 
+        <!-- aqui o campo minado -->
+         <div class="saidaDados">
+
+            <div class="placar">
+               <input type="text" class="contador" placeholder="000" disabled >
+               <img src="midia/emoji.png" alt="emoji feliz" id="happy"><!-- por enquanto nao confirmado -->
+               <input type="text" class="contador" placeholder="000" disabled>
+            </div>
+
+            <!-- aqui fica o campo minado -->
+              <div id="planoCarteziano">
+                <!-- e aqui onde o plano carteziano tem que ser gerado com js -->
+               <canvas id="quadriculado" width="561" height="561"></canvas>
+               <script type="text/javascript" src="js/campominado.js"></script>
+               
+               </div>
+         </div>
+
+
+
+      <!-- rodapé com seus botoes -->
+     <footer>
+        <button onclick="window.location.href='./home.html'">Sair</button>
+            <button id="creditos">Créditos</button>
+    </footer>
+
+    <!-- telinha dos creditos -->
+    <dialog id="dialog1">
+     <h2>creditos dos alunos</h2>
+     <p><b>2º ADS de 2026 Fatec-Lins</b> </p>
+     <p>- Adriel Antônio Alves</p>
+     <p>- Ana Beatriz Germano</p>
+     <p>- fellype Berbel</p>
+     <p>- Fernando Henrique</p>
+     <button id="close">OK</button>
+    </dialog>
+        
+     <!-- Minha parte do dom javaScript -->
+    <script src="js/modal.js"></script>
+
+</body>
+</html>
