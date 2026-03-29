@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="css/style.css"> <!-- coloque o css -->
-    <title>Campo-Minado</title>
+    <link rel="stylesheet" href="css/style.css"> 
+    <title>Campo Matemático</title>
 
     <style>
     @font-face {
@@ -19,12 +19,6 @@
 </head>
 <body>
     <div class="conteiner">
-        <!-- a navbar -->
-        <nav>
-            <h1>Campo Matematico!</h1>
-            <!-- acho que seria melhor só atualizar o cuculo no placar em vez de ficar criando telas -->
-            <button id="ProximaPagina" title="Proximo Exercício"><i class="bi bi-arrow-bar-right"></i></button>
-        </nav>
         
         <!-- aqui começa as divs essa é onde aparece o cauculo e onde é inserido o resultado e enviado para js caucular se esta certo ou errado -->
         <div class="painelControle" id="painelControle">
@@ -39,7 +33,7 @@
          <div class="saidaDados">
 
             <div class="placar">
-               <input type="text" class="contador" placeholder="000" disabled >
+               <input type="text" class="contador pontuacao" placeholder="000" disabled >
                <img src="midia/emoji.png" alt="emoji feliz" id="happy"><!-- por enquanto nao confirmado -->
                <input type="text" class="contador" placeholder="000" disabled>
             </div>
@@ -63,11 +57,11 @@
 
     <!-- telinha dos creditos -->
     <dialog id="dialog1">
-     <h2>creditos dos alunos</h2>
+     <h2>Créditos</h2>
      <p><b>2º ADS de 2026 Fatec-Lins</b> </p>
      <p>- Adriel Antônio Alves</p>
      <p>- Ana Beatriz Germano</p>
-     <p>- fellype Berbel</p>
+     <p>- Fellype Berbel</p>
      <p>- Fernando Henrique</p>
      <button id="close">OK</button>
     </dialog>

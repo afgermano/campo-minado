@@ -9,6 +9,9 @@ bombaImg.onload = () => {
 const canvas = document.getElementById('quadriculado');
 const ctx = canvas.getContext('2d');
 
+// ✅ pega o input da pontuação
+const pontuacaoEl = document.querySelector(".pontuacao");
+
 const nTileX = 11;
 const nTileY = 11;
 const step = 51;
@@ -16,6 +19,7 @@ const tileSize = 50;
 
 let tiles = [];
 let gameOver = false;
+let pontuacao = 0;
 
 // funções
 let functionsList = [];
@@ -39,6 +43,14 @@ class Tile {
         this.isOpen = false;
         this.isBomb = false;
         this.correct = false;
+    }
+}
+
+// ================= SCORE =================
+
+function updateScore(){
+    if (pontuacaoEl){
+        pontuacaoEl.value = pontuacao.toString().padStart(3, '0');
     }
 }
 
@@ -118,17 +130,14 @@ function drawTile(tile){
     let x = (tile.i * step) + 1;
     let y = (tile.j * step) + 1;
 
-    // fundo
     ctx.fillStyle = "#aaa";
     ctx.fillRect(x, y, tileSize, tileSize);
 
-    // eixo
     if (tile.xValue === 0 || tile.yValue === 0){
         ctx.fillStyle = "#ddd";
         ctx.fillRect(x, y, tileSize, tileSize);
     }
 
-    // destaque do eixo
     if (hoverTile){
         if (tile.i === hoverTile.i || tile.j === hoverTile.j){
             ctx.fillStyle = "rgba(0,0,255,0.1)";
@@ -144,7 +153,6 @@ function drawTile(tile){
         }
 
         else if (tile.isBomb){
-            // tenta desenhar imagem
             if (bombaImg.complete){
                 ctx.drawImage(bombaImg, x, y, tileSize, tileSize);
             } else {
@@ -154,7 +162,6 @@ function drawTile(tile){
         }
     }
 
-    // mostra números no canvs
     ctx.fillStyle = "black";
     ctx.font = "12px Arial";
     ctx.textAlign = "center";
@@ -218,6 +225,9 @@ canvas.addEventListener("click", () => {
         tile.isOpen = true;
         tile.correct = true;
 
+        pontuacao += 100; // ✅ ACERTO
+        updateScore();
+
         addSolvedFunction(f);
 
         currentFunction = functionsList.shift();
@@ -235,6 +245,9 @@ canvas.addEventListener("click", () => {
         tile.isOpen = true;
         tile.isBomb = true;
 
+        pontuacao -= 50; // ❌ ERRO
+        updateScore();
+
         setTimeout(() => {
             alert("💥 Errou!");
             restartGame();
@@ -248,6 +261,9 @@ canvas.addEventListener("click", () => {
 
 function restartGame(){
     gameOver = false;
+    pontuacao = 0;
+    updateScore();
+
     document.getElementById("funcoesResolvidas").innerHTML = "";
 
     generateTiles();
@@ -259,4 +275,5 @@ function restartGame(){
 
 generateTiles();
 generateFunctions();
+updateScore(); // inicializa display
 draw();

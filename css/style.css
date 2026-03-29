@@ -196,4 +196,12 @@ dialog {
 
 dialog button {
     margin-top: 10px;
+    background: #c0c0c0;
+
+    border-top: 3px solid #fff;
+    border-left: 3px solid #fff;
+    border-right: 3px solid #7a7a7a;
+    border-bottom: 3px solid #7a7a7a;
+
+    cursor: pointer;
 }
