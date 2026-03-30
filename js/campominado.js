@@ -1,4 +1,4 @@
-// adiciona imagem da bomba
+// imagem da bomba
 const bombaImg = new Image();
 bombaImg.src = "midia/bomba.png";
 
@@ -9,7 +9,7 @@ bombaImg.onload = () => {
 const canvas = document.getElementById('quadriculado');
 const ctx = canvas.getContext('2d');
 
-// ✅ pega o input da pontuação
+// pega o input da pontuação
 const pontuacaoEl = document.querySelector(".pontuacao");
 
 const nTileX = 11;
@@ -46,7 +46,7 @@ class Tile {
     }
 }
 
-// ================= SCORE =================
+// ================= PONTUAÇÃO DO JOGO =================
 
 function updateScore(){
     if (pontuacaoEl){
@@ -54,7 +54,7 @@ function updateScore(){
     }
 }
 
-// ================= FUNÇÕES =================
+// ================= GERADOR DE FUNÇÕES =================
 
 function generateFunction(){
     let a, b, x, y;
@@ -101,8 +101,6 @@ function addSolvedFunction(f){
     el.appendChild(div);
 }
 
-// ================= PRINCIPAL =================
-
 function generateTiles(){
     tiles = [];
 
@@ -116,8 +114,6 @@ function generateTiles(){
 function getTile(i, j){
     return tiles.find(t => t.i === i && t.j === j);
 }
-
-// ================= DESENHO =================
 
 function draw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -176,8 +172,6 @@ function drawTile(tile){
     }
 }
 
-// ================= HOVER =================
-
 canvas.addEventListener("mousemove", (e) => {
     const rect = canvas.getBoundingClientRect();
 
@@ -210,7 +204,6 @@ function updateHoverUI(){
     }
 }
 
-// ================= MOUSE =================
 
 canvas.addEventListener("click", () => {
     if (gameOver || !hoverTile) return;
@@ -257,7 +250,7 @@ canvas.addEventListener("click", () => {
     draw();
 });
 
-// ================= RESET DO JOGO =================
+//  reset do jogo
 
 function restartGame(){
     gameOver = false;
@@ -271,7 +264,7 @@ function restartGame(){
     draw();
 }
 
-// ================= INICIO JOGO =================
+// inicia o jogo já resetado
 
 generateTiles();
 generateFunctions();
