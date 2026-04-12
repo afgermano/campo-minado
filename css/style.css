@@ -46,6 +46,24 @@ nav h1 {
     margin: 20px;
 }
 
+#funcoesResolvidas{
+    height: 350px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: solid;
+    font-weight: normal;
+    font-family: 'deltarune', serif;
+    font-size: 30px;
+    text-align: center;
+    margin-top: 5px;
+    padding: 5px;
+}
+#showQuestao{
+    font-weight: normal;
+    font-family: 'deltarune', serif;
+    text-align: center;
+}
+
 /* PAINEL ESQUERDA */
 .painelControle {
     width: 400px;
@@ -203,5 +221,16 @@ dialog button {
     border-right: 3px solid #7a7a7a;
     border-bottom: 3px solid #7a7a7a;
 
+    cursor: pointer;
+}
+
+#gameModal {
+    text-align: center;
+    font-family: 'deltarune', serif;
+}
+
+#gameModal button {
+    margin-top: 10px;
+    padding: 8px 20px;
     cursor: pointer;
 }

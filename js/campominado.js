@@ -9,8 +9,7 @@ bombaImg.onload = () => {
 const canvas = document.getElementById('quadriculado');
 const ctx = canvas.getContext('2d');
 
-// pega o input da pontuação
-const pontuacaoEl = document.querySelector(".pontuacao");
+const placares = document.querySelectorAll(".contador");
 
 const nTileX = 11;
 const nTileY = 11;
@@ -19,7 +18,9 @@ const tileSize = 50;
 
 let tiles = [];
 let gameOver = false;
-let pontuacao = 0;
+let pontuacao = [0, 0];
+let vidas = [3, 3];
+let playerAtual = 0;
 
 // funções
 let functionsList = [];
@@ -46,16 +47,33 @@ class Tile {
     }
 }
 
-// ================= PONTUAÇÃO DO JOGO =================
-
+// ================= PONTUAÇÃO =================
 function updateScore(){
-    if (pontuacaoEl){
-        pontuacaoEl.value = pontuacao.toString().padStart(3, '0');
+    if (placares.length >= 2){
+        placares[0].value = pontuacao[0].toString().padStart(3,'0');
+        placares[1].value = pontuacao[1].toString().padStart(3,'0');
     }
 }
+// ================= FIM DE JOGO =================
+function endGame(){
+    gameOver = true;
 
-// ================= GERADOR DE FUNÇÕES =================
+    let mensagem = "";
 
+    if (pontuacao[0] > pontuacao[1]){
+        mensagem = "🏆 Jogador 1 venceu!";
+    } else if (pontuacao[1] > pontuacao[0]){
+        mensagem = "🏆 Jogador 2 venceu!";
+    } else {
+        mensagem = "🤝 Empate!";
+    }
+
+    setTimeout(() => {
+        showModal("Fim de jogo 🏁", mensagem);
+    }, 200);
+}
+
+// ================= FUNÇÕES =================
 function generateFunction(){
     let a, b, x, y;
 
@@ -101,6 +119,7 @@ function addSolvedFunction(f){
     el.appendChild(div);
 }
 
+// ================= GRID =================
 function generateTiles(){
     tiles = [];
 
@@ -115,6 +134,7 @@ function getTile(i, j){
     return tiles.find(t => t.i === i && t.j === j);
 }
 
+// ================= DESENHO =================
 function draw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     tiles.forEach(drawTile);
@@ -142,12 +162,10 @@ function drawTile(tile){
     }
 
     if (tile.isOpen){
-
         if (tile.correct){
             ctx.fillStyle = "green";
             ctx.fillRect(x, y, tileSize, tileSize);
         }
-
         else if (tile.isBomb){
             if (bombaImg.complete){
                 ctx.drawImage(bombaImg, x, y, tileSize, tileSize);
@@ -172,6 +190,7 @@ function drawTile(tile){
     }
 }
 
+// ================= MOUSE =================
 canvas.addEventListener("mousemove", (e) => {
     const rect = canvas.getBoundingClientRect();
 
@@ -204,9 +223,12 @@ function updateHoverUI(){
     }
 }
 
+// ================= CLIQUE =================
 
 canvas.addEventListener("click", () => {
     if (gameOver || !hoverTile) return;
+
+    const jogadorDaJogada = playerAtual; // ✅ AGORA CERTO
 
     const tile = hoverTile;
     const f = currentFunction;
@@ -218,7 +240,7 @@ canvas.addEventListener("click", () => {
         tile.isOpen = true;
         tile.correct = true;
 
-        pontuacao += 100; // ✅ ACERTO
+        pontuacao[jogadorDaJogada] += 100;
         updateScore();
 
         addSolvedFunction(f);
@@ -226,10 +248,8 @@ canvas.addEventListener("click", () => {
         currentFunction = functionsList.shift();
 
         if (!currentFunction){
-            setTimeout(() => {
-                alert("🏆 Você venceu!");
-                restartGame();
-            }, 200);
+            endGame();
+            return;
         } else {
             updateUI();
         }
@@ -238,35 +258,62 @@ canvas.addEventListener("click", () => {
         tile.isOpen = true;
         tile.isBomb = true;
 
-        pontuacao -= 50; // ❌ ERRO
+        vidas[jogadorDaJogada]--; 
         updateScore();
 
+        // 💀 GAME OVER
+        if (vidas[jogadorDaJogada] <= 0){
+            gameOver = true;
+
+            setTimeout(() => {
+                let vencedor = (jogadorDaJogada === 0) ? 2 : 1;
+
+                showModal(
+                    "Game Over 💀",
+                    `Jogador ${jogadorDaJogada + 1} perdeu!\n🏆 Jogador ${vencedor} venceu!`
+                );
+            }, 200);
+
+            return;
+        }
+
+        // ❌ ERRO
         setTimeout(() => {
-            alert("💥 Errou!");
-            restartGame();
+            showModal(
+                "Erro!",
+                `💥 Você perdeu 1 vida!\n${getHearts(vidas[jogadorDaJogada])}`
+            );
         }, 200);
     }
 
+    // 🔄 troca turno
+    playerAtual = (playerAtual + 1) % 2;
+
+    updateScore();
     draw();
 });
 
-//  reset do jogo
+function getHearts(v){
+    return "❤️".repeat(v);
+}
 
+// ================= RESET =================
 function restartGame(){
     gameOver = false;
-    pontuacao = 0;
-    updateScore();
+    pontuacao = [0, 0];
+    vidas = [3, 3];
+    playerAtual = 0;
 
     document.getElementById("funcoesResolvidas").innerHTML = "";
 
     generateTiles();
     generateFunctions();
+    updateScore();
     draw();
 }
 
-// inicia o jogo já resetado
-
+// ================= START =================
 generateTiles();
 generateFunctions();
-updateScore(); // inicializa display
+updateScore();
 draw();

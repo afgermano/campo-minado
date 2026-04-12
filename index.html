@@ -13,7 +13,14 @@
     src: url('fonts/Calculator.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
-}
+    }
+
+    @font-face {
+        font-family: 'deltarune';
+        src: url('fonts/deltarune.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
     </style>
 
 </head>
@@ -34,7 +41,7 @@
 
             <div class="placar">
                <input type="text" class="contador pontuacao" placeholder="000" disabled >
-               <img src="midia/emoji.png" alt="emoji feliz" id="happy"><!-- por enquanto nao confirmado -->
+               <img src="midia/emoji.png" alt="emoji feliz" id="happy">
                <input type="text" class="contador" placeholder="000" disabled>
             </div>
 
@@ -66,7 +73,14 @@
      <button id="close">OK</button>
     </dialog>
         
+    <dialog id="gameModal">
+      <h2 id="modalTitulo"></h2>
+      <p id="modalMensagem"></p>
+      <button id="modalBtn">OK</button>
+    </dialog>
+
      <!-- Minha parte do dom javaScript -->
+    <script src="js/modalGame.js"></script>
     <script src="js/modal.js"></script>
 
 </body>
