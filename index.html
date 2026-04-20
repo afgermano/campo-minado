@@ -1,32 +1,31 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="css/style.css"> 
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="midia/Group 1.png" type="image/x-icon"> 
     <title>Campo Matemático</title>
 
     <style>
-    @font-face {
-    font-family: 'calculator';
-    src: url('fonts/Calculator.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-    }
+      @font-face {
+      font-family: 'calculator';
+      src: url('fonts/Calculator.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      }
 
-    @font-face {
-        font-family: 'deltarune';
-        src: url('fonts/deltarune.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-    }
+      @font-face {
+          font-family: 'deltarune';
+          src: url('fonts/deltarune.ttf') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+      }
     </style>
-
-</head>
-<body>
+  </head>
+  <body>
     <div class="conteiner">
-        
         <!-- aqui começa as divs essa é onde aparece o cauculo e onde é inserido o resultado e enviado para js caucular se esta certo ou errado -->
         <div class="painelControle" id="painelControle">
           <div class="questoesMatematica">
@@ -48,13 +47,11 @@
             <!-- aqui fica o campo minado -->
               <div id="planoCarteziano">
                 <!-- e aqui onde o plano carteziano tem que ser gerado com js -->
-               <canvas id="quadriculado" width="561" height="561"></canvas>
-               <script type="text/javascript" src="js/campominado.js"></script>
+                <canvas id="quadriculado" width="561" height="561"></canvas>
+                <script type="text/javascript" src="js/campominado.js"></script>
                
                </div>
          </div>
-
-
 
       <!-- rodapé com seus botoes -->
      <footer>
@@ -64,16 +61,16 @@
 
     <!-- telinha dos creditos -->
     <dialog id="dialog1">
-     <h2>Créditos</h2>
-     <p><b>2º ADS de 2026 Fatec-Lins</b> </p>
-     <p>- Adriel Antônio Alves</p>
-     <p>- Ana Beatriz Germano</p>
-     <p>- Fellype Berbel</p>
-     <p>- Fernando Henrique</p>
-     <button id="close">OK</button>
+      <h2>Créditos</h2>
+      <p><b>2º ADS de 2026 Fatec-Lins</b> </p>
+      <p>- Adriel Antônio Alves</p>
+      <p>- Ana Beatriz Germano</p>
+      <p>- Fellype Berbel</p>
+      <p>- Fernando Henrique</p>
+      <button id="close">OK</button>
     </dialog>
         
-    <dialog id="gameModal">
+    <dialog id="gameModal" class="modal-game">
       <h2 id="modalTitulo"></h2>
       <p id="modalMensagem"></p>
       <button id="modalBtn">OK</button>
@@ -83,5 +80,5 @@
     <script src="js/modalGame.js"></script>
     <script src="js/modal.js"></script>
 
-</body>
+  </body>
 </html>

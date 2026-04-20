@@ -19,7 +19,6 @@ body {
 
 /* Container central */
 .conteiner {
-    text-align: center;
     color: white;
     position: relative; 
     display: flex;
@@ -30,16 +29,15 @@ body {
 }
 #band {
     position: absolute;
-    right: -6%;
+    right: -8em;
     top: 30%;
-    width: 90px;
+    width: 9em;
 }
 
 /* Título estilo pixel + inclinado */
 h1 {
-  
-  font-size: 64px;
-  color: #dcdcdc;
+  font-size: 70px;
+  color: #ffffff;
 
   /* contorno escuro pixelado */
   text-shadow:
@@ -61,10 +59,11 @@ h1 {
 
 #bomb{
     position: absolute;
-    right: 500px;
-    top: 42%;
-    width: 70px;
+    right: 34em;
+    top: 33%;
+    width: 10em;
 }
+
 
 
 /* Botão estilo retrô */
@@ -73,23 +72,37 @@ button {
     padding: 10px 30px;
     background: #dcdcdc;
     border: 3px solid #555;
-    box-shadow: 4px 4px 0px #333;
+    background: #c0c0c0;
+    border-top: 3px solid #fff;
+    border-left: 3px solid #fff;
+    border-right: 3px solid #7a7a7a;
+    border-bottom: 3px solid #7a7a7a;
     cursor: pointer;
     transition: 0.1s;
 }
 
 /* efeito hover */
 button:hover {
-  background: #5a5a5a;
+    background: #e6e6e6;
 }
 
 /* Efeito ao clicar */
 button:active {
     transform: translate(4px, 4px);
-    box-shadow: none;
+    border-top: 3px solid #fff;
+    border-left: 3px solid #fff;
+    border-right: 3px solid #7a7a7a;
+    border-bottom: 3px solid #7a7a7a;
 }
 
 /* Layout tipo menu */
 .conteiner button {
     margin: 20px;
+}
+
+.facul{
+    position: absolute;
+    font-size: 20px;
+    bottom: 40px;
+    justify-content: center;
 }

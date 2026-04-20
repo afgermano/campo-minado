@@ -270,7 +270,7 @@ canvas.addEventListener("click", () => {
 
                 showModal(
                     "Game Over 💀",
-                    `Jogador ${jogadorDaJogada + 1} perdeu!\n🏆 Jogador ${vencedor} venceu!`
+                    `💀Jogador ${jogadorDaJogada + 1} perdeu!\n🏆 Jogador ${vencedor} venceu!`
                 );
             }, 200);
 

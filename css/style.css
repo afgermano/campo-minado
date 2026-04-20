@@ -229,6 +229,33 @@ dialog button {
     font-family: 'deltarune', serif;
 }
 
+.modal-game {
+    text-align: center;
+    font-family: 'deltarune', serif;
+    padding: 30px;
+    min-width: 300px;
+
+    background: #c0c0c0;
+
+    border-top: 4px solid #fff;
+    border-left: 4px solid #fff;
+    border-right: 4px solid #7a7a7a;
+    border-bottom: 4px solid #7a7a7a;
+
+    animation: popup 0.3s ease;
+}
+@keyframes popup {
+    from {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+
 #gameModal button {
     margin-top: 10px;
     padding: 8px 20px;
