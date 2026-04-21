@@ -156,7 +156,7 @@ nav h1 {
     width: 40px;
     height: 30px;
     background-color: black;
-    color: red;
+    color: rgb(107, 106, 106);
     font-weight: normal;
     font-family: 'calculator', serif;
     font-size:x-large;
@@ -261,3 +261,18 @@ dialog button {
     padding: 8px 20px;
     cursor: pointer;
 }
+
+/* CORES DOS JOGADORES */
+.player1 {
+    color: #6a77cf;
+}
+
+.player2 {
+    color: #2d8134;
+}
+
+/* TABULEIRO */
+#quadriculado {
+    transition: all 0.3s ease;
+}
+

@@ -2,6 +2,9 @@
 const bombaImg = new Image();
 bombaImg.src = "midia/bomba.png";
 
+const bandeiraImg = new Image();
+bandeiraImg.src = "midia/Group 1.png";
+
 bombaImg.onload = () => {
     draw();
 };
@@ -33,6 +36,8 @@ let hoverTile = null;
 const offsetX = Math.floor(nTileX / 2);
 const offsetY = Math.floor(nTileY / 2);
 
+// troca de turno
+
 class Tile {
     constructor(i, j){
         this.i = i;
@@ -54,6 +59,22 @@ function updateScore(){
         placares[1].value = pontuacao[1].toString().padStart(3,'0');
     }
 }
+// ================= TROCA DE TURNO =================
+function updateVisualTurno(){
+    // remove estilos antigos
+    canvas.classList.remove("player1-board", "player2-board");
+    placares[0].classList.remove("player1", "player2");
+    placares[1].classList.remove("player1", "player2");
+
+    if (playerAtual === 0){
+        canvas.classList.add("player1-board");
+        placares[0].classList.add("player1");
+    } else {
+        canvas.classList.add("player2-board");
+        placares[1].classList.add("player2");
+    }
+}
+
 // ================= FIM DE JOGO =================
 function endGame(){
     gameOver = true;
@@ -150,23 +171,26 @@ function drawTile(tile){
     ctx.fillRect(x, y, tileSize, tileSize);
 
     if (tile.xValue === 0 || tile.yValue === 0){
-        ctx.fillStyle = "#ddd";
-        ctx.fillRect(x, y, tileSize, tileSize);
+    ctx.fillStyle = "#9b9999";
+    ctx.fillRect(x, y, tileSize, tileSize);
     }
 
     if (hoverTile){
         if (tile.i === hoverTile.i || tile.j === hoverTile.j){
-            ctx.fillStyle = "rgba(0,0,255,0.1)";
+            ctx.fillStyle = (playerAtual === 0) ? "#6a77cf67" : "#6acf7267";
             ctx.fillRect(x, y, tileSize, tileSize);
         }
     }
 
     if (tile.isOpen){
         if (tile.correct){
-            ctx.fillStyle = "green";
-            ctx.fillRect(x, y, tileSize, tileSize);
-        }
-        else if (tile.isBomb){
+            if (bandeiraImg.complete){
+                ctx.drawImage(bandeiraImg, x, y, tileSize, tileSize);
+            } else {
+                ctx.fillStyle = "green"; // fallback
+                ctx.fillRect(x, y, tileSize, tileSize);
+            }
+        }else if (tile.isBomb){
             if (bombaImg.complete){
                 ctx.drawImage(bombaImg, x, y, tileSize, tileSize);
             } else {
@@ -177,7 +201,7 @@ function drawTile(tile){
     }
 
     ctx.fillStyle = "black";
-    ctx.font = "12px Arial";
+    ctx.font = "15px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
 
@@ -210,8 +234,8 @@ function drawHoverBox(){
     let x = (hoverTile.i * step) + 1;
     let y = (hoverTile.j * step) + 1;
 
-    ctx.strokeStyle = "blue";
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = (playerAtual === 0) ? "#6a77cf" : "#2d8134";
+    ctx.lineWidth = 3;
     ctx.strokeRect(x, y, tileSize, tileSize);
 }
 
@@ -228,7 +252,7 @@ function updateHoverUI(){
 canvas.addEventListener("click", () => {
     if (gameOver || !hoverTile) return;
 
-    const jogadorDaJogada = playerAtual; // ✅ AGORA CERTO
+    const jogadorDaJogada = playerAtual; 
 
     const tile = hoverTile;
     const f = currentFunction;
@@ -288,6 +312,7 @@ canvas.addEventListener("click", () => {
 
     // 🔄 troca turno
     playerAtual = (playerAtual + 1) % 2;
+    updateVisualTurno();
 
     updateScore();
     draw();
@@ -310,6 +335,7 @@ function restartGame(){
     generateFunctions();
     updateScore();
     draw();
+    updateVisualTurno();
 }
 
 // ================= START =================
@@ -317,3 +343,4 @@ generateTiles();
 generateFunctions();
 updateScore();
 draw();
+updateVisualTurno();
