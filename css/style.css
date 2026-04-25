@@ -226,14 +226,16 @@ dialog button {
 
 #gameModal {
     text-align: center;
-    font-family: 'deltarune', serif;
+    font-family: 'kart', serif;
+    text-transform: uppercase;
 }
 
 .modal-game {
     text-align: center;
-    font-family: 'deltarune', serif;
+    font-family: 'kart', serif;
     padding: 30px;
     min-width: 300px;
+    font-size: xx-large;
 
     background: #c0c0c0;
 

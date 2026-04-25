@@ -9,6 +9,131 @@ bombaImg.onload = () => {
     draw();
 };
 
+const explosionSound = new Audio("midia/explosao.mp3");
+explosionSound.volume = 0.6;
+
+function playExplosionSound(){
+    const sound = explosionSound.cloneNode(); // cria cópia
+    sound.volume = 0.6;
+    sound.play();
+}
+let explosion = null;
+
+function triggerExplosion(tile){
+    explosion = {
+        x: tile.i * step + tileSize/2,
+        y: tile.j * step + tileSize/2,
+        radius: 0,
+        maxRadius: 80
+    };
+
+    animateExplosion();
+}
+function animateExplosion(){
+    if (!explosion) return;
+
+    explosion.radius += 5;
+
+    draw();
+
+    ctx.beginPath();
+    ctx.arc(explosion.x, explosion.y, explosion.radius, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
+    ctx.fill();
+
+    if (explosion.radius < explosion.maxRadius){
+        requestAnimationFrame(animateExplosion);
+    } else {
+        explosion = null;
+    }
+}
+let particles = [];
+
+function triggerExplosion(tile){
+    const centerX = tile.i * step + tileSize / 2;
+    const centerY = tile.j * step + tileSize / 2;
+
+    for (let i = 0; i < 40; i++){
+        particles.push({
+            x: centerX,
+            y: centerY,
+            vx: (Math.random() - 0.5) * 6,
+            vy: (Math.random() - 0.5) * 6,
+            size: Math.random() * 6 + 4,
+            life: 1
+        });
+    }
+
+    animateParticles();
+}
+function animateParticles(){
+    function loop(){
+        draw(); // redesenha o tabuleiro
+
+        // desenha partículas
+        particles.forEach((p, index) => {
+            // movimento
+            p.x += p.vx;
+            p.y += p.vy;
+
+            // gravidade leve (efeito fogo subindo/caindo)
+            p.vy += 0.1;
+
+            // diminuir vida
+            p.life -= 0.02;
+            p.size *= 0.96;
+
+            // cor estilo fogo
+            const alpha = p.life;
+            ctx.fillStyle = `rgba(${255}, ${Math.floor(Math.random()*150)}, 0, ${alpha})`;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+
+            // remover quando morrer
+            if (p.life <= 0){
+                particles.splice(index, 1);
+            }
+        });
+
+        if (particles.length > 0){
+            requestAnimationFrame(loop);
+        }
+    }
+
+    loop();
+}
+let shakeIntensity = 0;
+let shakeDuration = 0;
+
+function triggerShake(intensity = 8, duration = 20){
+    shakeIntensity = intensity;
+    shakeDuration = duration;
+}
+
+function draw(){
+    ctx.save();
+
+    // 🎯 aplica shake
+    if (shakeDuration > 0){
+        const dx = (Math.random() - 0.5) * shakeIntensity;
+        const dy = (Math.random() - 0.5) * shakeIntensity;
+
+        ctx.translate(dx, dy);
+
+        shakeDuration--;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    tiles.forEach(drawTile);
+
+    if (hoverTile) drawHoverBox();
+
+    ctx.restore();
+}
+
 const canvas = document.getElementById('quadriculado');
 const ctx = canvas.getContext('2d');
 
@@ -156,12 +281,6 @@ function getTile(i, j){
 }
 
 // ================= DESENHO =================
-function draw(){
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    tiles.forEach(drawTile);
-
-    if (hoverTile) drawHoverBox();
-}
 
 function drawTile(tile){
     let x = (tile.i * step) + 1;
@@ -282,6 +401,10 @@ canvas.addEventListener("click", () => {
         tile.isOpen = true;
         tile.isBomb = true;
 
+        triggerExplosion(tile);
+        triggerShake(10, 25); // 💥 impacto forte
+        playExplosionSound();
+
         vidas[jogadorDaJogada]--; 
         updateScore();
 
@@ -297,7 +420,7 @@ canvas.addEventListener("click", () => {
                     `💀Jogador ${jogadorDaJogada + 1} perdeu!\n🏆 Jogador ${vencedor} venceu!`
                 );
             }, 200);
-
+            
             return;
         }
 
@@ -305,7 +428,7 @@ canvas.addEventListener("click", () => {
         setTimeout(() => {
             showModal(
                 "Erro!",
-                `💥 Você perdeu 1 vida!\n${getHearts(vidas[jogadorDaJogada])}`
+                `💥 perdeu 1 vida!\n${getHearts(vidas[jogadorDaJogada])}`
             );
         }, 200);
     }
