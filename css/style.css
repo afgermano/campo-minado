@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Aldrich&family=Press+Start+2P&display=swap');
+
 /* RESET */
 body {
-    margin: 0;
-    min-height: 100vh; /* altura total da tela */
+    margin-top: 4%;
+    min-height: 90vh; /* altura total da tela */
     background: url("../midia/background.jpg") no-repeat center center;
     background-size: cover;
 }
@@ -110,20 +112,6 @@ nav h1 {
     margin-bottom: 10px;
 }
 
-/* BOTÃO ENVIAR */
-#EnviarResp {
-    width: 100%;
-    padding: 10px;
-
-    background: #b0b0b0;
-    color: #666;
-
-    border-top: 3px solid #fff;
-    border-left: 3px solid #fff;
-    border-right: 3px solid #7a7a7a;
-    border-bottom: 3px solid #7a7a7a;
-}
-
 /* PAINEL DIREITA */
 .saidaDados {
     padding: 10px;
@@ -181,69 +169,61 @@ nav h1 {
 }
 
 /* BOTÕES */
-footer {
+.pixel-button {
+    display: inline-block;
+    padding: 5px 20px;
     margin-top: 20px;
+    background: #bdbdbd;
+    color: black;
+    font-family: 'deltarune', serif;
+    font-size: 15px;
+    text-decoration: none;
+    text-align: center;
+    border: 3px solid black;
+    box-shadow:
+        inset 4px 4px 0 #f5f5f5,
+        inset -4px -4px 0 #7a7a7a;
+    transition: 0.15s ease;
 }
 
-footer button {
-    padding: 10px 20px;
-    margin: 5px;
+.pixel-button:hover {
+    transform: translateY(2px);
+    box-shadow:
+        inset 2px 2px 0 #f5f5f5,
+        inset -2px -2px 0 #7a7a7a;
+}
 
-    background: #c0c0c0;
-
-    border-top: 3px solid #fff;
-    border-left: 3px solid #fff;
-    border-right: 3px solid #7a7a7a;
-    border-bottom: 3px solid #7a7a7a;
-
-    cursor: pointer;
+.pixel-button:active {
+    transform: translateY(4px);
+    box-shadow:
+        inset -2px -2px 0 #f5f5f5,
+        inset 2px 2px 0 #7a7a7a;
 }
 
 /* DIALOG (CRÉDITOS) */
 dialog {
     border: none;
-    padding: 20px;
-
+    width: 15%;
+    padding: 50px;
     background: #c0c0c0;
-
-    border-top: 4px solid #fff;
-    border-left: 4px solid #fff;
-    border-right: 4px solid #7a7a7a;
-    border-bottom: 4px solid #7a7a7a;
-}
-
-dialog button {
-    margin-top: 10px;
-    background: #c0c0c0;
-
-    border-top: 3px solid #fff;
-    border-left: 3px solid #fff;
-    border-right: 3px solid #7a7a7a;
-    border-bottom: 3px solid #7a7a7a;
-
-    cursor: pointer;
-}
-
-#gameModal {
-    text-align: center;
-    font-family: 'kart', serif;
-    text-transform: uppercase;
+    box-shadow:
+        inset 4px 4px 0 #f5f5f5,
+        inset -4px -4px 0 #7a7a7a;
+    font-family: "Press Start 2P", system-ui;
+    font-size: 12px;
 }
 
 .modal-game {
     text-align: center;
-    font-family: 'kart', serif;
+    width: 20%;
     padding: 30px;
-    min-width: 300px;
-    font-size: xx-large;
-
+    min-width: auto;
+    font-size: 15px;
     background: #c0c0c0;
-
-    border-top: 4px solid #fff;
-    border-left: 4px solid #fff;
-    border-right: 4px solid #7a7a7a;
-    border-bottom: 4px solid #7a7a7a;
-
+    font-family: "Press Start 2P", system-ui;
+    box-shadow:
+        inset 4px 4px 0 #f5f5f5,
+        inset -4px -4px 0 #7a7a7a;
     animation: popup 0.3s ease;
 }
 @keyframes popup {

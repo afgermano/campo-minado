@@ -402,13 +402,12 @@ canvas.addEventListener("click", () => {
         tile.isBomb = true;
 
         triggerExplosion(tile);
-        triggerShake(10, 25); // 💥 impacto forte
+        triggerShake(10, 25);
         playExplosionSound();
 
         vidas[jogadorDaJogada]--; 
         updateScore();
 
-        // 💀 GAME OVER
         if (vidas[jogadorDaJogada] <= 0){
             gameOver = true;
 
@@ -416,19 +415,18 @@ canvas.addEventListener("click", () => {
                 let vencedor = (jogadorDaJogada === 0) ? 2 : 1;
 
                 showModal(
-                    "Game Over 💀",
-                    `💀Jogador ${jogadorDaJogada + 1} perdeu!\n🏆 Jogador ${vencedor} venceu!`
+                    "Game Over",
+                    `Perdedor: ${jogadorDaJogada + 1}💀\n Vencedor: ${vencedor}🏆`
                 );
             }, 200);
             
             return;
         }
 
-        // ❌ ERRO
         setTimeout(() => {
             showModal(
-                "Erro!",
-                `💥 perdeu 1 vida!\n${getHearts(vidas[jogadorDaJogada])}`
+                "BOOM! 💣",
+                `Menos 1 vida \n \n ${getHearts(vidas[jogadorDaJogada])}`
             );
         }, 200);
     }
