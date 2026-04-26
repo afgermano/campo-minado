@@ -115,7 +115,6 @@ function triggerShake(intensity = 8, duration = 20){
 function draw(){
     ctx.save();
 
-    // 🎯 aplica shake
     if (shakeDuration > 0){
         const dx = (Math.random() - 0.5) * shakeIntensity;
         const dy = (Math.random() - 0.5) * shakeIntensity;
@@ -220,25 +219,68 @@ function endGame(){
 }
 
 // ================= FUNÇÕES =================
-function generateFunction(){
-    let a, b, x, y;
+// ================= FUNÇÕES =================
 
-    do {
-        a = Math.floor(Math.random() * 5) + 1;
-        b = Math.floor(Math.random() * 11) - 5;
-        x = Math.floor(Math.random() * 11) - 5;
+function generateFunction() {
+    let tipo;
+    let a, b, c, x, y;
 
-        y = a * x + b;
+    // escolhe aleatoriamente entre 1º grau e 2º grau
+    tipo = Math.random() < 0.5 ? 1 : 2;
 
-    } while (y < -5 || y > 5);
+    // -----------------------------
+    // FUNÇÃO DE 1º GRAU
+    // y = ax + b
+    // -----------------------------
+    if (tipo === 1) {
+        do {
+            a = Math.floor(Math.random() * 5) + 1;
+            b = Math.floor(Math.random() * 11) - 5;
+            x = Math.floor(Math.random() * 11) - 5;
 
-    return { a, b, x, y };
+            y = a * x + b;
+
+        } while (y < -5 || y > 5);
+
+        return {
+            tipo: 1,
+            a,
+            b,
+            x,
+            y
+        };
+    }
+
+    // -----------------------------
+    // FUNÇÃO DE 2º GRAU
+    // y = ax² + bx + c
+    // -----------------------------
+    else {
+        do {
+            a = Math.floor(Math.random() * 3) + 1;
+            b = Math.floor(Math.random() * 7) - 3;
+            c = Math.floor(Math.random() * 7) - 3;
+            x = Math.floor(Math.random() * 7) - 3;
+
+            y = a * (x * x) + (b * x) + c;
+
+        } while (y < -5 || y > 5);
+
+        return {
+            tipo: 2,
+            a,
+            b,
+            c,
+            x,
+            y
+        };
+    }
 }
 
-function generateFunctions(){
+function generateFunctions() {
     functionsList = [];
 
-    for(let i = 0; i < 10; i++){
+    for (let i = 0; i < 10; i++) {
         functionsList.push(generateFunction());
     }
 
@@ -246,18 +288,33 @@ function generateFunctions(){
     updateUI();
 }
 
-function updateUI(){
+function updateUI() {
     const f = currentFunction;
 
-    document.getElementById("showQuestao").innerText =
-        `y = ${f.a}x ${f.b >= 0 ? '+' : ''} ${f.b} | x = ${f.x}`;
+    // função de 1º grau
+    if (f.tipo === 1) {
+        document.getElementById("showQuestao").innerText =
+            `y = ${f.a}x ${f.b >= 0 ? "+" : ""} ${f.b} | x = ${f.x}`;
+    }
+
+    // função de 2º grau
+    else {
+        document.getElementById("showQuestao").innerText =
+            `y = ${f.a}x² ${f.b >= 0 ? "+" : ""} ${f.b}x ${f.c >= 0 ? "+" : ""} ${f.c} | x = ${f.x}`;
+    }
 }
 
-function addSolvedFunction(f){
+function addSolvedFunction(f) {
     const el = document.getElementById("funcoesResolvidas");
-
     const div = document.createElement("div");
-    div.innerText = `y = ${f.a}x ${f.b >= 0 ? '+' : ''} ${f.b} (x=${f.x})`;
+
+    if (f.tipo === 1) {
+        div.innerText =
+            `y = ${f.a}x ${f.b >= 0 ? "+" : ""} ${f.b} (x=${f.x})`;
+    } else {
+        div.innerText =
+            `y = ${f.a}x² ${f.b >= 0 ? "+" : ""} ${f.b}x ${f.c >= 0 ? "+" : ""} ${f.c} (x=${f.x})`;
+    }
 
     div.style.color = "gray";
     div.style.textDecoration = "line-through";
@@ -407,6 +464,7 @@ canvas.addEventListener("click", () => {
 
         vidas[jogadorDaJogada]--; 
         updateScore();
+
 
         if (vidas[jogadorDaJogada] <= 0){
             gameOver = true;
