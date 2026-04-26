@@ -219,7 +219,6 @@ function endGame(){
 }
 
 // ================= FUNÇÕES =================
-// ================= FUNÇÕES =================
 
 function generateFunction() {
     let tipo;
@@ -484,7 +483,7 @@ canvas.addEventListener("click", () => {
         setTimeout(() => {
             showModal(
                 "BOOM! 💣",
-                `Menos 1 vida \n \n ${getHearts(vidas[jogadorDaJogada])}`
+                `-1 vida... :( \n \n ${getHearts(vidas[jogadorDaJogada])}`
             );
         }, 200);
     }
