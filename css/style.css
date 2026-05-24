@@ -200,10 +200,10 @@ nav h1 {
         inset 2px 2px 0 #7a7a7a;
 }
 
-/* DIALOG (CRÉDITOS) */
+/* DIALOG */
 dialog {
     border: none;
-    width: 15%;
+    width: 40%;
     padding: 50px;
     background: #c0c0c0;
     box-shadow:
@@ -211,6 +211,17 @@ dialog {
         inset -4px -4px 0 #7a7a7a;
     font-family: "Press Start 2P", system-ui;
     font-size: 12px;
+}
+
+.ctn-dialog{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.tutorial, .creditos{
+    padding: 40px;
+    border: 3px solid black
 }
 
 .modal-game {

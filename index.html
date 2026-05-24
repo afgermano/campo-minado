@@ -63,17 +63,44 @@
       <!-- rodapé com seus botoes -->
      <footer>
         <button class="pixel-button" onclick="window.location.href='./index.html'">Reiniciar</button>
+        <button class="pixel-button" id="informacoes">Como jogar?</button>
         <button class="pixel-button" onclick="window.location.href='./home.html'">Sair</button>
-        <button class="pixel-button" id="creditos">Creditos</button>
+        
     </footer>
 
     <!-- telinha dos creditos -->
-    <dialog id="dialog1">
-      <h2>Créditos</h2>
-      <p>Adriel Antônio Alves</p>
-      <p>Ana Beatriz Germano</p>
-      <p>Fellype Berbel</p>
-      <p>Fernando Henrique</p>
+    <dialog class="dialog1" id="dialog1">
+      <div class="ctn-dialog">
+      <div class="tutorial">
+        <h2 class="tutorial.title">Como jogar?</h2>
+        <p class="tutorial-text"> 
+          O tabuleiro é um plano cartesiano — cada quadradinho representa uma coordenada (x, y). 
+        </p>
+        <p class="tutorial-text">
+          A cada rodada, uma função matemática aparece na tela junto com o valor de x, por exemplo y = 2x + 1 | x = 3. 
+        </p>
+        <p class="tutorial-text">
+          Basta calcular o y (no caso, 7) e clicar no ponto (3, 7) do tabuleiro. Acertou? Bandeira e pontos!
+        </p> 
+        <p class="tutorial-text" style="color: red">
+          Errou? Perde uma vida 💣. 
+        </p>
+        <p class="tutorial-text">
+          São 2 jogadores se alternando, cada um com 3 vidas — vence quem tiver mais pontos ao fim das 10 rodadas, ou quem sobrar de pé se o outro perder todas as vidas.
+        </p>
+        <p class="tutorial-text">
+          Passe o mouse pelos quadradinhos para ver as coordenadas antes de clicar!
+        </p>
+        </p>
+      </div>
+      <div class="creditos">
+        <h2 class="creditos-title">Créditos</h2>
+          <p>Ana Beatriz Germano</p>
+          <p>Adriel Antônio Alves</p>
+          <p>Fellype Berbel</p>
+          <p>Fernando Henrique</p>
+      </div>
+      </div>
       <button class="pixel-button" id="close">OK</button>
     </dialog>
         
@@ -83,7 +110,6 @@
       <button class="pixel-button" id="modalBtn">OK</button>
     </dialog>
 
-     <!-- Minha parte do dom javaScript -->
     <script src="js/modalGame.js"></script>
     <script src="js/modal.js"></script>
 

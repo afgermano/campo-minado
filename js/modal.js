@@ -1,4 +1,4 @@
-const abrirTela = document.querySelector('#creditos');
+const abrirTela = document.querySelector('#informacoes');
         const dialog1 = document.querySelector('#dialog1');
         const fecharTela = document.querySelector('#close');
 

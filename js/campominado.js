@@ -1,4 +1,3 @@
-// imagem da bomba
 const bombaImg = new Image();
 bombaImg.src = "midia/bomba.png";
 
@@ -13,40 +12,11 @@ const explosionSound = new Audio("midia/explosao.mp3");
 explosionSound.volume = 0.6;
 
 function playExplosionSound(){
-    const sound = explosionSound.cloneNode(); // cria cópia
+    const sound = explosionSound.cloneNode();
     sound.volume = 0.6;
     sound.play();
 }
-let explosion = null;
 
-function triggerExplosion(tile){
-    explosion = {
-        x: tile.i * step + tileSize/2,
-        y: tile.j * step + tileSize/2,
-        radius: 0,
-        maxRadius: 80
-    };
-
-    animateExplosion();
-}
-function animateExplosion(){
-    if (!explosion) return;
-
-    explosion.radius += 5;
-
-    draw();
-
-    ctx.beginPath();
-    ctx.arc(explosion.x, explosion.y, explosion.radius, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
-    ctx.fill();
-
-    if (explosion.radius < explosion.maxRadius){
-        requestAnimationFrame(animateExplosion);
-    } else {
-        explosion = null;
-    }
-}
 let particles = [];
 
 function triggerExplosion(tile){
@@ -66,24 +36,18 @@ function triggerExplosion(tile){
 
     animateParticles();
 }
+
 function animateParticles(){
     function loop(){
-        draw(); // redesenha o tabuleiro
+        draw();
 
-        // desenha partículas
         particles.forEach((p, index) => {
-            // movimento
             p.x += p.vx;
             p.y += p.vy;
-
-            // gravidade leve (efeito fogo subindo/caindo)
             p.vy += 0.1;
-
-            // diminuir vida
             p.life -= 0.02;
             p.size *= 0.96;
 
-            // cor estilo fogo
             const alpha = p.life;
             ctx.fillStyle = `rgba(${255}, ${Math.floor(Math.random()*150)}, 0, ${alpha})`;
 
@@ -91,7 +55,6 @@ function animateParticles(){
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fill();
 
-            // remover quando morrer
             if (p.life <= 0){
                 particles.splice(index, 1);
             }
@@ -104,6 +67,7 @@ function animateParticles(){
 
     loop();
 }
+
 let shakeIntensity = 0;
 let shakeDuration = 0;
 
@@ -118,16 +82,12 @@ function draw(){
     if (shakeDuration > 0){
         const dx = (Math.random() - 0.5) * shakeIntensity;
         const dy = (Math.random() - 0.5) * shakeIntensity;
-
         ctx.translate(dx, dy);
-
         shakeDuration--;
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
     tiles.forEach(drawTile);
-
     if (hoverTile) drawHoverBox();
 
     ctx.restore();
@@ -150,7 +110,8 @@ let vidas = [3, 3];
 let playerAtual = 0;
 
 // funções
-let functionsList = [];
+const TOTAL_RODADAS = 10;
+let rodadasRestantes = TOTAL_RODADAS;
 let currentFunction = null;
 
 // hover
@@ -160,16 +121,12 @@ let hoverTile = null;
 const offsetX = Math.floor(nTileX / 2);
 const offsetY = Math.floor(nTileY / 2);
 
-// troca de turno
-
 class Tile {
     constructor(i, j){
         this.i = i;
         this.j = j;
-
         this.xValue = i - offsetX;
         this.yValue = offsetY - j;
-
         this.isOpen = false;
         this.isBomb = false;
         this.correct = false;
@@ -183,9 +140,9 @@ function updateScore(){
         placares[1].value = pontuacao[1].toString().padStart(3,'0');
     }
 }
+
 // ================= TROCA DE TURNO =================
 function updateVisualTurno(){
-    // remove estilos antigos
     canvas.classList.remove("player1-board", "player2-board");
     placares[0].classList.remove("player1", "player2");
     placares[1].classList.remove("player1", "player2");
@@ -223,81 +180,73 @@ function endGame(){
 function generateFunction() {
     let tipo;
     let a, b, c, x, y;
+    let targetTile;
+    let attempts = 0;
+    const maxAttempts = 1000;
 
-    // escolhe aleatoriamente entre 1º grau e 2º grau
     tipo = Math.random() < 0.5 ? 1 : 2;
 
-    // -----------------------------
-    // FUNÇÃO DE 1º GRAU
-    // y = ax + b
-    // -----------------------------
     if (tipo === 1) {
         do {
+            // se tentar muitas vezes sem achar tile livre, tenta o outro tipo
+            if (attempts > maxAttempts) {
+                tipo = 2;
+                attempts = 0;
+                break;
+            }
+
             a = Math.floor(Math.random() * 5) + 1;
             b = Math.floor(Math.random() * 11) - 5;
             x = Math.floor(Math.random() * 11) - 5;
-
             y = a * x + b;
 
-        } while (y < -5 || y > 5);
+            targetTile = tiles.find(t => t.xValue === x && t.yValue === y);
+            attempts++;
 
-        return {
-            tipo: 1,
-            a,
-            b,
-            x,
-            y
-        };
+        } while (y < -5 || y > 5 || !targetTile || targetTile.isOpen);
+
+        if (tipo === 1) {
+            return { tipo: 1, a, b, x, y };
+        }
     }
 
-    // -----------------------------
-    // FUNÇÃO DE 2º GRAU
-    // y = ax² + bx + c
-    // -----------------------------
-    else {
-        do {
-            a = Math.floor(Math.random() * 3) + 1;
-            b = Math.floor(Math.random() * 7) - 3;
-            c = Math.floor(Math.random() * 7) - 3;
-            x = Math.floor(Math.random() * 7) - 3;
+    // 2º grau (também usado como fallback do 1º grau)
+    attempts = 0;
+    do {
+        a = Math.floor(Math.random() * 3) + 1;
+        b = Math.floor(Math.random() * 7) - 3;
+        c = Math.floor(Math.random() * 7) - 3;
+        x = Math.floor(Math.random() * 7) - 3;
+        y = a * (x * x) + (b * x) + c;
 
-            y = a * (x * x) + (b * x) + c;
+        targetTile = tiles.find(t => t.xValue === x && t.yValue === y);
+        attempts++;
 
-        } while (y < -5 || y > 5);
+        // segurança: se o tabuleiro estiver muito cheio, encerra o jogo
+        if (attempts > maxAttempts) {
+            endGame();
+            return null;
+        }
 
-        return {
-            tipo: 2,
-            a,
-            b,
-            c,
-            x,
-            y
-        };
-    }
+    } while (y < -5 || y > 5 || !targetTile || targetTile.isOpen);
+
+    return { tipo: 2, a, b, c, x, y };
 }
 
 function generateFunctions() {
-    functionsList = [];
-
-    for (let i = 0; i < 10; i++) {
-        functionsList.push(generateFunction());
-    }
-
-    currentFunction = functionsList.shift();
+    rodadasRestantes = TOTAL_RODADAS;
+    currentFunction = generateFunction();
     updateUI();
 }
 
 function updateUI() {
     const f = currentFunction;
+    if (!f) return;
 
-    // função de 1º grau
     if (f.tipo === 1) {
         document.getElementById("showQuestao").innerText =
             `y = ${f.a}x ${f.b >= 0 ? "+" : ""} ${f.b} | x = ${f.x}`;
-    }
-
-    // função de 2º grau
-    else {
+    } else {
         document.getElementById("showQuestao").innerText =
             `y = ${f.a}x² ${f.b >= 0 ? "+" : ""} ${f.b}x ${f.c >= 0 ? "+" : ""} ${f.c} | x = ${f.x}`;
     }
@@ -337,7 +286,6 @@ function getTile(i, j){
 }
 
 // ================= DESENHO =================
-
 function drawTile(tile){
     let x = (tile.i * step) + 1;
     let y = (tile.j * step) + 1;
@@ -346,8 +294,8 @@ function drawTile(tile){
     ctx.fillRect(x, y, tileSize, tileSize);
 
     if (tile.xValue === 0 || tile.yValue === 0){
-    ctx.fillStyle = "#9b9999";
-    ctx.fillRect(x, y, tileSize, tileSize);
+        ctx.fillStyle = "#9b9999";
+        ctx.fillRect(x, y, tileSize, tileSize);
     }
 
     if (hoverTile){
@@ -362,10 +310,10 @@ function drawTile(tile){
             if (bandeiraImg.complete){
                 ctx.drawImage(bandeiraImg, x, y, tileSize, tileSize);
             } else {
-                ctx.fillStyle = "green"; // fallback
+                ctx.fillStyle = "green";
                 ctx.fillRect(x, y, tileSize, tileSize);
             }
-        }else if (tile.isBomb){
+        } else if (tile.isBomb){
             if (bombaImg.complete){
                 ctx.drawImage(bombaImg, x, y, tileSize, tileSize);
             } else {
@@ -423,19 +371,16 @@ function updateHoverUI(){
 }
 
 // ================= CLIQUE =================
-
 canvas.addEventListener("click", () => {
     if (gameOver || !hoverTile) return;
 
-    const jogadorDaJogada = playerAtual; 
-
+    const jogadorDaJogada = playerAtual;
     const tile = hoverTile;
     const f = currentFunction;
 
     if (tile.isOpen) return;
 
     if (tile.xValue === f.x && tile.yValue === f.y){
-
         tile.isOpen = true;
         tile.correct = true;
 
@@ -444,14 +389,17 @@ canvas.addEventListener("click", () => {
 
         addSolvedFunction(f);
 
-        currentFunction = functionsList.shift();
+        rodadasRestantes--;
 
-        if (!currentFunction){
+        if (rodadasRestantes <= 0){
             endGame();
             return;
-        } else {
-            updateUI();
         }
+
+        currentFunction = generateFunction();
+        if (!currentFunction) return;
+
+        updateUI();
 
     } else {
         tile.isOpen = true;
@@ -461,22 +409,20 @@ canvas.addEventListener("click", () => {
         triggerShake(10, 25);
         playExplosionSound();
 
-        vidas[jogadorDaJogada]--; 
+        vidas[jogadorDaJogada]--;
         updateScore();
-
 
         if (vidas[jogadorDaJogada] <= 0){
             gameOver = true;
 
             setTimeout(() => {
                 let vencedor = (jogadorDaJogada === 0) ? 2 : 1;
-
                 showModal(
                     "Game Over",
                     `Perdedor: ${jogadorDaJogada + 1}💀\n Vencedor: ${vencedor}🏆`
                 );
             }, 200);
-            
+
             return;
         }
 
