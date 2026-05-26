@@ -1,3 +1,9 @@
+//para iniciar na tela home
+if (!document.referrer.includes('home.html') && 
+    sessionStorage.getItem('veioDaHome') !== 'true') {
+    window.location.href = './home.html';
+}
+
 const bombaImg = new Image();
 bombaImg.src = "midia/bomba.png";
 

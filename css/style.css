@@ -2,9 +2,9 @@
 
 /* RESET */
 body {
-    margin-top: 4%;
-    min-height: 90vh; /* altura total da tela */
-    background: url("../midia/background.jpg") no-repeat center center;
+    margin: 0;
+    min-height: 100vh; /* altura total */
+    background: url("../midia/background.jpg") no-repeat center center fixed;
     background-size: cover;
 }
 /* CONTAINER */
