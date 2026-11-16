@@ -159,7 +159,7 @@ nav h1 {
 /* CANVAS */
 #quadriculado {
     width: 370px;
-    height: 420px;
+    height: 370px; /* quadrado, igual ao canvas 561x561 (evita tiles esticados) */
     background: #dcdcdc;
 
     border-top: 3px solid #fff;
@@ -269,3 +269,15 @@ dialog {
     transition: all 0.3s ease;
 }
 
+
+/* VIDAS + COORDENADA */
+.infoJogo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    margin-bottom: 8px;
+    min-height: 24px;
+    font-family: 'deltarune', serif;
+    font-size: 20px;
+}

@@ -10,9 +10,9 @@ bombaImg.src = "midia/bomba.png";
 const bandeiraImg = new Image();
 bandeiraImg.src = "midia/Group 1.png";
 
-bombaImg.onload = () => {
-    draw();
-};
+// redesenha quando as imagens terminarem de carregar
+bombaImg.onload = () => draw();
+bandeiraImg.onload = () => draw();
 
 const explosionSound = new Audio("midia/explosao.mp3");
 explosionSound.volume = 0.6;
@@ -20,10 +20,13 @@ explosionSound.volume = 0.6;
 function playExplosionSound(){
     const sound = explosionSound.cloneNode();
     sound.volume = 0.6;
-    sound.play();
+    // se o arquivo não existir (ou o navegador bloquear o áudio), ignora o erro
+    const promessa = sound.play();
+    if (promessa) promessa.catch(() => {});
 }
 
 let particles = [];
+let animandoParticulas = false;
 
 function triggerExplosion(tile){
     const centerX = tile.i * step + tileSize / 2;
@@ -40,34 +43,39 @@ function triggerExplosion(tile){
         });
     }
 
-    animateParticles();
+    // só abre um loop de animação por vez
+    if (!animandoParticulas) animateParticles();
 }
 
 function animateParticles(){
+    animandoParticulas = true;
+
     function loop(){
         draw();
 
-        particles.forEach((p, index) => {
+        particles.forEach((p) => {
             p.x += p.vx;
             p.y += p.vy;
             p.vy += 0.1;
             p.life -= 0.02;
             p.size *= 0.96;
 
-            const alpha = p.life;
-            ctx.fillStyle = `rgba(${255}, ${Math.floor(Math.random()*150)}, 0, ${alpha})`;
+            if (p.life <= 0) return;
 
+            ctx.fillStyle = `rgba(255, ${Math.floor(Math.random()*150)}, 0, ${p.life})`;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
             ctx.fill();
-
-            if (p.life <= 0){
-                particles.splice(index, 1);
-            }
         });
+
+        // remove as partículas mortas depois do forEach (sem splice dentro do loop)
+        particles = particles.filter(p => p.life > 0);
 
         if (particles.length > 0){
             requestAnimationFrame(loop);
+        } else {
+            animandoParticulas = false;
+            draw();
         }
     }
 
@@ -83,6 +91,9 @@ function triggerShake(intensity = 8, duration = 20){
 }
 
 function draw(){
+    // limpa antes de aplicar o tremor, senão sobram faixas sujas nas bordas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     ctx.save();
 
     if (shakeDuration > 0){
@@ -92,7 +103,6 @@ function draw(){
         shakeDuration--;
     }
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
     tiles.forEach(drawTile);
     if (hoverTile) drawHoverBox();
 
@@ -111,6 +121,7 @@ const tileSize = 50;
 
 let tiles = [];
 let gameOver = false;
+let bloqueado = false; // true enquanto o modal de "BOOM" ainda vai abrir
 let pontuacao = [0, 0];
 let vidas = [3, 3];
 let playerAtual = 0;
@@ -139,12 +150,20 @@ class Tile {
     }
 }
 
-// ================= PONTUAÇÃO =================
+// ================= PONTUAÇÃO E VIDAS =================
 function updateScore(){
     if (placares.length >= 2){
         placares[0].value = pontuacao[0].toString().padStart(3,'0');
         placares[1].value = pontuacao[1].toString().padStart(3,'0');
     }
+    updateVidas();
+}
+
+function updateVidas(){
+    const v1 = document.getElementById("vidasJ1");
+    const v2 = document.getElementById("vidasJ2");
+    if (v1) v1.innerText = vidas[0] > 0 ? getHearts(vidas[0]) : "💀";
+    if (v2) v2.innerText = vidas[1] > 0 ? getHearts(vidas[1]) : "💀";
 }
 
 // ================= TROCA DE TURNO =================
@@ -245,31 +264,43 @@ function generateFunctions() {
     updateUI();
 }
 
+// monta o texto da função sem "1x", sem "+ 0" e sem espaço duplo
+// ex.: y = x² - 3x + 2  |  y = 2x - 3  |  y = 3x
+function formatPoly(f) {
+    const termos = f.tipo === 1
+        ? [[f.a, "x"], [f.b, ""]]
+        : [[f.a, "x²"], [f.b, "x"], [f.c, ""]];
+
+    let s = "";
+    termos.forEach(([coef, variavel]) => {
+        if (coef === 0) return;
+
+        const abs = Math.abs(coef);
+        const corpo = (variavel !== "" && abs === 1) ? variavel : `${abs}${variavel}`;
+
+        if (s === "") {
+            s = (coef < 0 ? "-" : "") + corpo;
+        } else {
+            s += (coef < 0 ? " - " : " + ") + corpo;
+        }
+    });
+
+    return `y = ${s || "0"}`;
+}
+
 function updateUI() {
     const f = currentFunction;
     if (!f) return;
 
-    if (f.tipo === 1) {
-        document.getElementById("showQuestao").innerText =
-            `y = ${f.a}x ${f.b >= 0 ? "+" : ""} ${f.b} | x = ${f.x}`;
-    } else {
-        document.getElementById("showQuestao").innerText =
-            `y = ${f.a}x² ${f.b >= 0 ? "+" : ""} ${f.b}x ${f.c >= 0 ? "+" : ""} ${f.c} | x = ${f.x}`;
-    }
+    document.getElementById("showQuestao").innerText =
+        `${formatPoly(f)} | x = ${f.x}`;
 }
 
 function addSolvedFunction(f) {
     const el = document.getElementById("funcoesResolvidas");
     const div = document.createElement("div");
 
-    if (f.tipo === 1) {
-        div.innerText =
-            `y = ${f.a}x ${f.b >= 0 ? "+" : ""} ${f.b} (x=${f.x})`;
-    } else {
-        div.innerText =
-            `y = ${f.a}x² ${f.b >= 0 ? "+" : ""} ${f.b}x ${f.c >= 0 ? "+" : ""} ${f.c} (x=${f.x})`;
-    }
-
+    div.innerText = `${formatPoly(f)} (x=${f.x})`;
     div.style.color = "gray";
     div.style.textDecoration = "line-through";
 
@@ -313,14 +344,14 @@ function drawTile(tile){
 
     if (tile.isOpen){
         if (tile.correct){
-            if (bandeiraImg.complete){
+            if (bandeiraImg.complete && bandeiraImg.naturalWidth > 0){
                 ctx.drawImage(bandeiraImg, x, y, tileSize, tileSize);
             } else {
                 ctx.fillStyle = "green";
                 ctx.fillRect(x, y, tileSize, tileSize);
             }
         } else if (tile.isBomb){
-            if (bombaImg.complete){
+            if (bombaImg.complete && bombaImg.naturalWidth > 0){
                 ctx.drawImage(bombaImg, x, y, tileSize, tileSize);
             } else {
                 ctx.fillStyle = "red";
@@ -344,16 +375,37 @@ function drawTile(tile){
 }
 
 // ================= MOUSE =================
-canvas.addEventListener("mousemove", (e) => {
+
+// converte a posição do mouse (tela) em tile, descontando a borda do canvas
+// e a escala entre o tamanho do CSS e o tamanho interno do canvas
+function tileFromEvent(e){
     const rect = canvas.getBoundingClientRect();
+    const cs = getComputedStyle(canvas);
 
-    const mouseX = (e.clientX - rect.left) * (canvas.width / rect.width);
-    const mouseY = (e.clientY - rect.top) * (canvas.height / rect.height);
+    const bordaEsq = parseFloat(cs.borderLeftWidth) || 0;
+    const bordaTopo = parseFloat(cs.borderTopWidth) || 0;
+    const bordaH = bordaEsq + (parseFloat(cs.borderRightWidth) || 0);
+    const bordaV = bordaTopo + (parseFloat(cs.borderBottomWidth) || 0);
 
-    const i = Math.floor(mouseX / step);
-    const j = Math.floor(mouseY / step);
+    const larguraUtil = rect.width - bordaH;
+    const alturaUtil = rect.height - bordaV;
+    if (larguraUtil <= 0 || alturaUtil <= 0) return undefined;
 
-    hoverTile = getTile(i, j);
+    const mouseX = (e.clientX - rect.left - bordaEsq) * (canvas.width / larguraUtil);
+    const mouseY = (e.clientY - rect.top - bordaTopo) * (canvas.height / alturaUtil);
+
+    return getTile(Math.floor(mouseX / step), Math.floor(mouseY / step));
+}
+
+canvas.addEventListener("mousemove", (e) => {
+    hoverTile = tileFromEvent(e);
+
+    updateHoverUI();
+    draw();
+});
+
+canvas.addEventListener("mouseleave", () => {
+    hoverTile = null;
 
     updateHoverUI();
     draw();
@@ -370,18 +422,23 @@ function drawHoverBox(){
 
 function updateHoverUI(){
     const el = document.getElementById("coordenadaAtual");
+    if (!el) return;
 
-    if (hoverTile && el){
-        el.innerText = `(${hoverTile.xValue}, ${hoverTile.yValue})`;
-    }
+    el.innerText = hoverTile
+        ? `(${hoverTile.xValue}, ${hoverTile.yValue})`
+        : "(-, -)";
 }
 
 // ================= CLIQUE =================
-canvas.addEventListener("click", () => {
-    if (gameOver || !hoverTile) return;
+canvas.addEventListener("click", (e) => {
+    if (gameOver || bloqueado) return;
+
+    // usa a posição do próprio clique, não o último mousemove
+    const tile = tileFromEvent(e);
+    if (!tile) return;
+    hoverTile = tile;
 
     const jogadorDaJogada = playerAtual;
-    const tile = hoverTile;
     const f = currentFunction;
 
     if (tile.isOpen) return;
@@ -399,17 +456,24 @@ canvas.addEventListener("click", () => {
 
         if (rodadasRestantes <= 0){
             endGame();
+            draw();
             return;
         }
 
         currentFunction = generateFunction();
-        if (!currentFunction) return;
+        if (!currentFunction){
+            draw();
+            return;
+        }
 
         updateUI();
 
     } else {
         tile.isOpen = true;
         tile.isBomb = true;
+
+        // impede cliques durante os 200 ms antes do modal abrir
+        bloqueado = true;
 
         triggerExplosion(tile);
         triggerShake(10, 25);
@@ -420,8 +484,10 @@ canvas.addEventListener("click", () => {
 
         if (vidas[jogadorDaJogada] <= 0){
             gameOver = true;
+            draw();
 
             setTimeout(() => {
+                bloqueado = false;
                 let vencedor = (jogadorDaJogada === 0) ? 2 : 1;
                 showModal(
                     "Game Over",
@@ -433,6 +499,7 @@ canvas.addEventListener("click", () => {
         }
 
         setTimeout(() => {
+            bloqueado = false;
             showModal(
                 "BOOM! 💣",
                 `-1 vida... :( \n \n ${getHearts(vidas[jogadorDaJogada])}`
@@ -455,15 +522,20 @@ function getHearts(v){
 // ================= RESET =================
 function restartGame(){
     gameOver = false;
+    bloqueado = false;
     pontuacao = [0, 0];
     vidas = [3, 3];
     playerAtual = 0;
+    particles = [];
+    shakeDuration = 0;
+    hoverTile = null;
 
     document.getElementById("funcoesResolvidas").innerHTML = "";
 
     generateTiles();
     generateFunctions();
     updateScore();
+    updateHoverUI();
     draw();
     updateVisualTurno();
 }
