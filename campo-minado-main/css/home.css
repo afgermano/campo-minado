@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Aldrich&family=Press+Start+2P&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Press Start 2P", system-ui;
+}
+
+body {
+    height: auto;
+    background: url("../midia/background.jpg") no-repeat center center;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container central */
+.conteiner {
+    color: white;
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+#band {
+    position: absolute;
+    right: -8em;
+    top: 30%;
+    width: 9em;
+}
+
+/* Título estilo pixel + inclinado */
+h1 {
+  font-size: 50px;
+  color: #ffffff;
+
+  /* contorno escuro pixelado */
+  text-shadow:
+    2px 0 #000,
+    -2px 0 #000,
+    0 2px #000,
+    0 -2px #000,
+    2px 2px #000,
+    -2px -2px #000,
+    2px -2px #000,
+    -2px 2px #000,
+
+    /* sombra estilo bloco (profundidade) */
+    4px 4px 0 #707070,
+    6px 6px 0 #222;
+
+  letter-spacing: 2px;
+  margin: 10px;
+}
+
+#bomb{
+    position: absolute;
+    right: 50em;
+    top: 33%;
+    width: 10em;
+}
+
+
+.pixel-button {
+    display: inline-block;
+    padding: 5px 20px;
+    margin-top: 20px;
+    background: #bdbdbd;
+    color: black;
+    font-family: 'deltarune', serif;
+    font-size: 15px;
+    text-decoration: none;
+    text-align: center;
+    border: 3px solid black;
+    box-shadow:
+        inset 4px 4px 0 #f5f5f5,
+        inset -4px -4px 0 #7a7a7a;
+    transition: 0.15s ease;
+}
+
+.pixel-button:hover {
+    transform: translateY(2px);
+    box-shadow:
+        inset 2px 2px 0 #f5f5f5,
+        inset -2px -2px 0 #7a7a7a;
+}
+
+.pixel-button:active {
+    transform: translateY(4px);
+    box-shadow:
+        inset -2px -2px 0 #f5f5f5,
+        inset 2px 2px 0 #7a7a7a;
+}
+
+
+/* Layout tipo menu */
+.conteiner button {
+    margin: 20px;
+}
+
+.facul{
+    position: absolute;
+    font-size: 10px;
+    bottom: 40px;
+    justify-content: center;
+}
